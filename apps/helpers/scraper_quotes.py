@@ -136,6 +136,7 @@ class ScraperQuotex:
             if about_info:
                 about_author, description, born, location = about_info
                 quote_data = {
+                    'text': text,
                     "Author": about_author.text,
                     "Born": born.text,
                     "Location": location.text,

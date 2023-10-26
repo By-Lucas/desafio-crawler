@@ -23,3 +23,49 @@
 
  <!-- Page level custom scripts -->
  <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+
+ 
+ <script>
+    // PRE-PROCESSAMENTO DAS INFORMACOES ====================================================================
+  $(document).off('click', '#btn-analyze').on('click', '#btn-analyze', function (event) {
+      event.preventDefault();
+      $("#loading").show(); // mostra a animação de loading
+      
+      var url = $(this).data('url');
+      var formData = $('form').serialize();
+
+      $.ajax({
+          url: url,
+          type: 'POST',
+          data: formData,
+          headers: {
+              'X-CSRFToken': "{{ csrf_token }}"
+          },
+          success: function (data, status, xhr) {
+              $("#loading").hide();
+              $('#modal-update').modal('hide');
+              $('#modal-update').hide();
+              $('#mydiv').load(location.href + ' #mydiv');
+
+              // Atualiza o texto
+              $('#feeling').val(data.data.feeling).trigger('change');
+
+              $('#type_of_quotes').val(data.data.type_of_quote);
+              $('#name_in_title').val(data.data.name_in_title);
+              $('#reach_weight').val(data.data.reach_weight);
+              $('#weight_tier').val(data.data.weight_tier);
+              $('#final_score').val(data.data.final_score);
+
+              console.log(data.data.type_of_quote)
+              
+              showToast('success', data.message);
+              
+          },
+          error: function (data) {
+              $("#loading").hide();
+              showToast('error', 'Ocorreu um erro ao salvar os dados.',);
+          }
+      });
+  });
+
+ </script>

@@ -1,20 +1,13 @@
-import json
-import datetime
+
 from loguru import logger
 from datetime import timedelta
 
 from django.utils import timezone
-from django.http import JsonResponse
-from django.shortcuts import redirect, render, get_object_or_404
 
 from core.models import NotificationsModel
 
 
-def home(requests):
-    template_name = "core/home.html"
-    return render(requests, template_name)
-
-def get_notifications(request):
+def notification_context_processor(request):
     data = {}
     try:
         notify_ago = timezone.now() - timedelta(minutes=5)
@@ -36,7 +29,8 @@ def get_notifications(request):
         data['num_notifications'] = num_notifications
         
     except NotificationsModel.DoesNotExist:
+        logger.error('A model NotificationsModel não existe')
         data['notifications'] = []
         data['num_notifications'] = 0
     
-    return JsonResponse(data)
+    return data

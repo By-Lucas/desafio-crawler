@@ -66,6 +66,7 @@ THIRD_APPS = [
 PROJECT_APPS = [
     'core',
     'accounts',
+    'data_scrapy'
     # 'rest_framework_simplejwt',
 ]
 
@@ -144,6 +145,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'apps.core.context_processors.notification_context_processor',
             ],
         },
     },
