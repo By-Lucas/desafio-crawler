@@ -64,8 +64,8 @@ THIRD_APPS = [
 
 # New apps added
 PROJECT_APPS = [
-    # 'core',
-    # 'accounts',
+    'core',
+    'accounts',
     # 'rest_framework_simplejwt',
 ]
 
@@ -81,14 +81,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-JET_SIDE_MENU_COMPACT = True
-JET_CHANGE_FORM_SIBLING_LINKS = True
-
 
 SITE_ID = 1
 LOGIN_URL = "accounts:login"
 X_FRAME_OPTIONS = 'SAMEORIGIN'
-#AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'accounts.User'
 IMPORT_EXPORT_USE_TRANSACTIONS = True 
 
 # Quantidade de items para remover pelo django admin
@@ -96,6 +93,9 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
 ROOT_URLCONF = 'beemon.urls'
 
+
+JET_SIDE_MENU_COMPACT = True
+JET_CHANGE_FORM_SIBLING_LINKS = True
 
 JET_THEMES = [
     {
