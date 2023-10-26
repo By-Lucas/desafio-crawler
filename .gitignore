@@ -1,0 +1,36 @@
+# Ignorar arquivos e diretórios específicos do Django
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+*.sqlite3
+*.log
+
+# Ignorar diretórios específicos
+node_modules/
+__init__.py
+__pycache__
+
+# Arquivos específicos
+.env
+*.DS_Store
+
+# Dependências Python (pode variar dependendo das ferramentas que você usa)
+venv/
+env/
+
+# Dependências geradas
+lib/
+bin/
+include/
+python*.egg-info/
+
+# Arquivos de log
+*.log
+
+# Ignorar arquivos de configuração local
+settings/local.py
+
+# Ambiente virtual (se você estiver usando venv)
+venv/
