@@ -34,3 +34,7 @@ settings/local.py
 
 # Ambiente virtual (se você estiver usando venv)
 venv/
+
+test_scraper_quotes.py
+*.json
+*.xlsx
