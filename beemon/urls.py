@@ -9,7 +9,7 @@ urlpatterns = [
     re_path(r'^jet/dashboard/', include(('jet.dashboard.urls'), namespace="jet-dashboard")),
     re_path(r'^admin/', admin.site.urls),
 
-    #path('', include('core.urls'), name='home'),
+    path('', include('core.urls'), name='home'),
     # path('company/', include('company.urls'), name='company'),
     # path('accounts/', include('accounts.urls'), name='accounts'),
 ]
