@@ -10,8 +10,7 @@ urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
 
     path('', include('core.urls'), name='home'),
-    # path('company/', include('company.urls'), name='company'),
-    # path('accounts/', include('accounts.urls'), name='accounts'),
+    path('', include('data_scrapy.urls'), name='data_scrapy'),
 ]
 
 # LOAD STATICS / MIDIAS

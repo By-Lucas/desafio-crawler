@@ -22,9 +22,12 @@
  <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
 
  <!-- Page level custom scripts -->
- <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+ <script src="{% static 'js/alert-toast.js' %}"></script>
 
  
+ <script src="{% static 'js/datatables-demo.js' %}"></script>
+
+
  <script>
     // PRE-PROCESSAMENTO DAS INFORMACOES ====================================================================
   $(document).off('click', '#btn-analyze').on('click', '#btn-analyze', function (event) {
@@ -69,3 +72,52 @@
   });
 
  </script>
+
+<script>
+    // ATUALIZAR DINAMICAMENTE AS NOTIFICAÇÕES
+    $(document).ready(function () {
+      function updateNotification() {
+        $.ajax({
+          url: '{% url "get_notifications" %}',  // Defina a URL correta para a view que retorna as notificações
+          method: 'GET',
+          dataType: 'json',
+          success: function (data) {
+
+            console.log(data)
+
+            if (data.notifications.length > 0) {
+                $('#notificationCount').html('+' + data.notifications.length);
+
+              var notificationsHtml = '';
+              $.each(data.notifications, function(index, notification) {
+
+                notificationsHtml += '<a class="dropdown-item d-flex align-items-center" href="#">';
+                notificationsHtml += '<div class="mr-3">';
+                notificationsHtml += '<div class="icon-circle bg-primary">';
+                notificationsHtml += '<i class="fas fa-file-alt text-white"></i>';
+                notificationsHtml += '</div>';
+                notificationsHtml += '</div>';
+                notificationsHtml += '<div>';
+                notificationsHtml += '<div class="small text-gray-500">' + notification.created_date + '</div>';
+                notificationsHtml += '<span class="font-weight-bold">' + notification.title + '</span>';
+                notificationsHtml += '</div>';
+                notificationsHtml += '</a>';
+              });
+    
+              $('#notificationDropdownMenu').html(notificationsHtml);
+            } else {
+              $('#notificationCount').html(0);
+              $('#notificationDropdownMenu').html('<a class="dropdown-item d-flex align-items-center" href="#"><div class="mr-3"><div class="icon-circle bg-primary"> <i class="fas fa-file-alt text-white"></i></div></div><div><span class="font-weight-bold">Sem notificações</span></div></a>');
+            }
+          }
+        });
+      }
+    
+      updateNotification();
+    
+      setInterval(function () {
+        updateNotification();
+      }, 5000);
+    });
+    
+    </script>

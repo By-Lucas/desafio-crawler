@@ -6,6 +6,8 @@ from loguru import logger
 from decouple import config
 from bs4 import BeautifulSoup as bs
 
+from core.models import NotificationsModel as notify
+
 
 class ScraperQuotex:
     def __init__(self):
@@ -63,6 +65,7 @@ class ScraperQuotex:
         logger.warning('O(s) elemento(s) em que fez a busca não foi encontrado.')
         return None
 
+
     def find_elements(self, soup: bs, *args):
         """
         Realiza uma pesquisa flexível de vários elementos no BeautifulSoup com base em vários parâmetros.
@@ -95,7 +98,7 @@ class ScraperQuotex:
         return None
     
     
-    def fetch_about_info(self, about_url):
+    def fetch_about_info(self, about_url) -> tuple | None:
         '''Faz uma solicitação para a página "about"'''
         about_response = requests.get(about_url)
         if about_response.status_code == 200:
@@ -113,7 +116,7 @@ class ScraperQuotex:
             return None
 
 
-    def fetch_quotes_on_page(self, page_url):
+    def fetch_quotes_on_page(self, page_url) -> None:
         """Faz solicitção diretna na url passada como prâmetro"""
         html = self.fetch_html(page_url)
         page_soup = bs(html, 'html.parser')
@@ -145,11 +148,7 @@ class ScraperQuotex:
                 }
                 self.quotes_data.append(quote_data)
                 
-        # Após coletar todos os dados, salve-os em JSON e XLSX
-        self.save_data_as_json()
-        self.save_data_as_xlsx()
-        
-    def run(self):
+    async def run(self, save_json=None, save_xlsx=None) -> list:
         
         """Inicia o scraping e faz a paginação"""
         page_number = 1
@@ -167,26 +166,31 @@ class ScraperQuotex:
             self.fetch_quotes_on_page(page_url)
             page_number += 1
             
-            if page_number == 2:
-                break
+        if save_json:
+            self.save_data_as_json()
+        if save_xlsx:
+            self.save_data_as_xlsx()
+            
+        return self.quotes_data
 
-    def save_data_as_json(self):
+    def save_data_as_json(self) -> bool:
         with open('quotes_data.json', 'w', encoding="utf-8") as json_file:
             json.dump(self.quotes_data, json_file, indent=4, ensure_ascii=False)
         logger.success("Dados salvos em JSON.")
+        notify.objects.create(title="Dados salvos em no formato JSON", 
+                              description=f"Foram salvos todos os dados rapados do site: {self.url}")
 
-    def save_data_as_xlsx(self):
+    def save_data_as_xlsx(self) -> bool:
         file_path = 'quotes_data.xlsx'
-
-        # if os.path.exists(file_path):
-        #     os.remove(file_path)
 
         df = pd.DataFrame(self.quotes_data)
         print(df)
         df.to_excel(file_path, index=False)
         logger.success(f"Dados salvos em XLSX: {file_path}")
+        notify.objects.create(title="Dados salvos em no formato XLSX", 
+                              description=f"Foram salvos todos os dados rapados do site: {self.url}")
  
  
-# Exemplo de uso
-scraper = ScraperQuotex()
-scraper.run()
+# # Exemplo de uso
+# scraper = ScraperQuotex()
+# scraper.run()

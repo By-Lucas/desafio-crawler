@@ -17,12 +17,16 @@
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
+            
 
             <!-- Main Content -->
             <div id="content">
 
                 <!-- Topbar Navbar -->
                 {% include 'includes/top-navbar.html' %}
+
+                 <!-- Alerta TOAST -->
+                {% include "includes/alert-toast.html" %}
                
                 <!-- Begin Page Content -->
                 {% block body %} {% endblock body %}
@@ -49,8 +53,7 @@
     <!-- Logout Modal-->
     {% include 'includes/modal-logout.html' %}
 
-    <!-- Alerta TOAST -->
-    {% include "includes/alert-toast.html" %}
+   
     
    {% include 'includes/js.html' %}
 

@@ -14,7 +14,6 @@
         <h1 class="h3 mb-0 text-gray-800">Beemon Tech</h1>
         <a href="#" class="float-right d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
             class="fas fa-download fa-sm text-white-50"></i> Dados</a>
-
     </div>
 
     <!-- Content Row -->
@@ -108,8 +107,17 @@
     
 <div class="container-fluid">
 
+    <div class="row"> 
+        <div class="col-sm-1 mr-4">
+            <h1 class="h3 mb-2 text-gray-800">Dados</h1>
+        </div>
+        <div class="col-sm">
+            <button href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#refresh-data"><i class="fas fa-sync-alt fa-sm text-white-50"></i> Atualizar</button>
+        </div>
+    </div>
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Dados</h1>
+    
+    
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
@@ -603,6 +611,8 @@
     </div>
 
 </div>
+
+{% include 'core/includes/modal-refresh-data.html' %}
 
 {% endblock body %}
 <!-- /.container-fluid -->
