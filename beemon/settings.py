@@ -85,12 +85,19 @@ JET_SIDE_MENU_COMPACT = True
 JET_CHANGE_FORM_SIBLING_LINKS = True
 
 
+SITE_ID = 1
+LOGIN_URL = "accounts:login"
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+#AUTH_USER_MODEL = 'accounts.User'
+IMPORT_EXPORT_USE_TRANSACTIONS = True 
+
+# Quantidade de items para remover pelo django admin
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
+
+ROOT_URLCONF = 'beemon.urls'
+
+
 JET_THEMES = [
-    {
-        'theme': 'dark',
-        'color': 'black',
-        'title': 'Dark',
-    },
     {
         'theme': 'default', # theme folder name
         'color': '#47bac1', # color of the theme's button in user menu
@@ -125,16 +132,6 @@ JET_THEMES = [
 JET_DEFAULT_THEME = 'default'  # Nome do tema padrão
 
 
-SITE_ID = 1
-LOGIN_URL = "accounts:login"
-X_FRAME_OPTIONS = 'SAMEORIGIN'
-AUTH_USER_MODEL = 'accounts.User'
-IMPORT_EXPORT_USE_TRANSACTIONS = True 
-
-# Quantidade de items para remover pelo django admin
-DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
-
-ROOT_URLCONF = 'beemon.urls'
 
 TEMPLATES = [
     {
@@ -167,11 +164,11 @@ DATABASES = {
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT'),
+        'OPTIONS': {
+            'options': f'-c search_path=beemondb,{SCHEMA_DB}',  # Substitua 'beemondb' pelo nome do esquema desejado
+        },
     }
 }
-# Habilitar segurança SSL para banco externos(não usar em localhost) + Schema do banco selecionado de acordo com tipo de ambiente
-#DATABASES['default']['OPTIONS'] = {'sslmode': 'require', 'options': f'-c search_path=clippingdb,{SCHEMA_DB}'}  
-DATABASES['default']['OPTIONS'] = {'options': f'-c search_path=beemondb,{SCHEMA_DB}'}  
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -191,6 +188,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+if DEBUG == False:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Internationalization
 LANGUAGE_CODE = 'pt-br'

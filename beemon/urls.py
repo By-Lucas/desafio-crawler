@@ -5,13 +5,13 @@ from django.urls import path, include, re_path
 
 
 urlpatterns = [
-    # re_path(r'^jet/', include(('jet.urls', 'jet'))),  # Django JET URLS
-    # re_path(r'^jet/dashboard/', include(('jet.dashboard.urls'), namespace="jet-dashboard")),   # Django JET dashboard URLS
-    # re_path(r'^admin/', admin.site.urls),
+    re_path(r'^jet/', include(('jet.urls', 'jet'))),
+    re_path(r'^jet/dashboard/', include(('jet.dashboard.urls'), namespace="jet-dashboard")),
+    re_path(r'^admin/', admin.site.urls),
 
-    path('', include('core.urls'), name='home'),
-    path('company/', include('company.urls'), name='company'),
-    path('accounts/', include('accounts.urls'), name='accounts'),
+    #path('', include('core.urls'), name='home'),
+    # path('company/', include('company.urls'), name='company'),
+    # path('accounts/', include('accounts.urls'), name='accounts'),
 ]
 
 # LOAD STATICS / MIDIAS
