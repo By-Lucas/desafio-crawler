@@ -6,13 +6,12 @@
             <h5 class="modal-title" id="refresh-dataLabel">Atualizar dados via Scraping</h5>
             <button type="button" class="btn btn-danger rounded-circle" data-dismiss="modal" aria-label="Close">X</button>
         </div>
-        <form action=""  method="post">
+        <form action="" method="post">
             <div class="modal-body">
-                <input type="text" name="oioi" value="OIOIOI" id="">
-            </div>
+                <p>Os dados serão atualizados em segundo plano, continuar?</p>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-            <button type="button" id="btn-update-data" class="btn btn-primary">Iniciar</button>
+            <button type="button" id="btn-update-data" class="btn btn-primary">Atualizar</button>
             </div>
         </form>
         </div>
@@ -37,23 +36,13 @@
               'X-CSRFToken': "{{ csrf_token }}"
           },
           success: function (data, status, xhr) {
-              //$("#loading").hide();
+              $("#loading").hide();
               $('#refresh-data').modal('hide');
               $('#refresh-data').hide();
-            //   $('#mydiv').load(location.href + ' #mydiv');
-
-              // Atualiza o texto
-            //   $('#feeling').val(data.data.feeling).trigger('change');
-
-            //   $('#type_of_quotes').val(data.data.type_of_quote);
-            //   $('#name_in_title').val(data.data.name_in_title);
-            //   $('#reach_weight').val(data.data.reach_weight);
-            //   $('#weight_tier').val(data.data.weight_tier);
-            //   $('#final_score').val(data.data.final_score);
-
+      
               console.log(data)
               
-              showToast('success', 'Os dados estão atualizando em segundo plano, em breve receberá notificaçção de conclusão');
+              showToast('success', data.message);
               
           },
           error: function (data) {

@@ -25,16 +25,19 @@
                 <!-- Topbar Navbar -->
                 {% include 'includes/top-navbar.html' %}
 
-                 <!-- Alerta TOAST -->
-                {% include "includes/alert-toast.html" %}
-               
+  
                 <!-- Begin Page Content -->
                 {% block body %} {% endblock body %}
                 <!-- /.container-fluid -->
 
             </div>
             <!-- End of Main Content -->
+            <!-- Div loading -->
+            {% include 'includes/div-loading.html' %}
 
+            <!-- Alerta TOAST -->
+            {% include "includes/alert-toast.html" %}
+               
             <!-- Footer -->
             {% include 'includes/footer.html' %}
             <!-- End of Footer -->

@@ -1,4 +1,4 @@
-import os
+import re
 import json
 import requests
 import pandas as pd
@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup as bs
 from core.models import NotificationsModel as notify
 
 
-class ScraperQuotex:
+class ScraperQuotes:
     def __init__(self):
         self.url = config("URL_QUOTES")
         self.quotes_data = []
@@ -20,19 +20,6 @@ class ScraperQuotex:
             return response.text
         else:
             raise Exception("Erro ao fazer a solicitação HTTP")
-
-    def parse_html_with_beautifulsoup(self, html):
-        soup = bs(html, 'html.parser')
-        # Agora você pode usar o BeautifulSoup para extrair dados da página da web
-        # Por exemplo, para obter o texto da citação:
-        quote_text = soup.find("span", {"itemprop": "text"}).text
-        # E para obter o autor:
-        author = soup.find("small", {"class": "author"}).text
-        # E assim por diante...
-
-        # Você pode retornar os dados ou usá-los como desejar
-        return quote_text, author
-
     
     def find_element(self, soup: bs, *args):
         """
@@ -59,7 +46,6 @@ class ScraperQuotex:
                 logger.error(f"Parâmetro de pesquisa inválido: {param}")
                 raise ValueError(f"Parâmetro de pesquisa inválido: {param}")
             if element:
-                logger.success('Elementro encontrado.')
                 return element
             
         logger.warning('O(s) elemento(s) em que fez a busca não foi encontrado.')
@@ -91,7 +77,6 @@ class ScraperQuotex:
                 logger.error(f"Parâmetro de pesquisa inválido: {param}")
                 raise ValueError(f"Parâmetro de pesquisa inválido: {param}")
             if element:
-                logger.success('Elementro encontrado.')
                 return element
             
         logger.warning('O(s) elemento(s) em que fez a busca não foi encontrado.')
@@ -115,7 +100,6 @@ class ScraperQuotex:
             logger.error("Erro ao fazer a solicitação HTTP para a página 'about'")
             return None
 
-
     def fetch_quotes_on_page(self, page_url) -> None:
         """Faz solicitção diretna na url passada como prâmetro"""
         html = self.fetch_html(page_url)
@@ -126,7 +110,8 @@ class ScraperQuotex:
         for element in elements:
             tag_list = []
             text = element.find("span", class_="text").text
-            author = element.find("small", class_="author").text
+            text = re.sub(r'[“”]', '', text)
+            
             about_link = element.find("a")
             about = about_link.get('href')
             about_url = f"{self.url}{about}"
@@ -148,8 +133,7 @@ class ScraperQuotex:
                 }
                 self.quotes_data.append(quote_data)
                 
-    async def run(self, save_json=None, save_xlsx=None) -> list:
-        
+    def run(self, save_json=None, save_xlsx=None) -> list:
         """Inicia o scraping e faz a paginação"""
         page_number = 1
 
@@ -165,6 +149,8 @@ class ScraperQuotex:
             logger.info(f"Coletando dados da página {page_number}")
             self.fetch_quotes_on_page(page_url)
             page_number += 1
+            if page_number == 2:
+                break
             
         if save_json:
             self.save_data_as_json()
@@ -173,6 +159,9 @@ class ScraperQuotex:
             
         return self.quotes_data
 
+    def show_dataframe(self) -> pd.DataFrame | None:
+        return pd.DataFrame(self.quotes_data)
+    
     def save_data_as_json(self) -> bool:
         with open('quotes_data.json', 'w', encoding="utf-8") as json_file:
             json.dump(self.quotes_data, json_file, indent=4, ensure_ascii=False)
@@ -189,8 +178,3 @@ class ScraperQuotex:
         logger.success(f"Dados salvos em XLSX: {file_path}")
         notify.objects.create(title="Dados salvos em no formato XLSX", 
                               description=f"Foram salvos todos os dados rapados do site: {self.url}")
- 
- 
-# # Exemplo de uso
-# scraper = ScraperQuotex()
-# scraper.run()

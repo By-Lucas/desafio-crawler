@@ -14,9 +14,9 @@ app = Celery('beemon', broker=CELERY_BROKER_URL)
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.update(result_expires=3600, 
                 enable_utc=True,
-                task_concurrency=5,  # Use 5 threads para simultaneidade
-                worker_heartbeat=120,  # Envie um batimento cardíaco a cada 120 segundos
-                worker_prefetch_multiplier=10, # Pré-buscar uma tarefa por vez
+                task_concurrency=5,
+                worker_heartbeat=120,
+                worker_prefetch_multiplier=10,
                 timezone='America/Sao_Paulo', 
                 )
 
