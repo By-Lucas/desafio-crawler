@@ -58,6 +58,30 @@ class QuotesViews(CreateView):
         return JsonResponse(context)
 
 
+class QuotesDataframe(View):
+    template_name = "core/includes/quotes-dataframe.html"
+    
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'data': []})
+        
+    def post(self, request, *args, **kwargs):
+        sidebar_config = True
+        scrapy__ = scrapy.run(save_xlsx=True)
+        try:
+            dataframe = scrapy.show_dataframe().to_dict(orient='records')
+            logger.success('Dados atualizados com sucesso')
+                
+            notify.objects.create(title="Dados atualizados com sucesso", 
+                                description="Os dados raspadaos do site quotes foram atualizados com sucesso.")
+            
+            return JsonResponse({'dataframe': dataframe})
+            #return render(request, self.template_name, {'data': dataframe})
+        
+        except ScrapyQuotesModel.DoesNotExist:
+            logger.error('A model ScrapyQuotesModel não existe ou ainda não foi criada')
+        
+
+
 class ScheduleView(View):
     
     def get(self, request, *args, **kwargs):

@@ -110,7 +110,7 @@ class ScraperQuotes:
         for element in elements:
             tag_list = []
             text = element.find("span", class_="text").text
-            text = re.sub(r'[“”]', '', text)
+            text = re.sub(r'[“”in ]', '', text)
             
             about_link = element.find("a")
             about = about_link.get('href')
@@ -123,11 +123,12 @@ class ScraperQuotes:
             about_info = self.fetch_about_info(about_url)
             if about_info:
                 about_author, description, born, location = about_info
+                location = re.sub(r'[in]', '', location.text)
                 quote_data = {
                     'text': text,
                     "Author": about_author.text,
                     "Born": born.text,
-                    "Location": location.text,
+                    "Location": location,
                     "Tags": ", ".join(tag_list),
                     "Description": description.text
                 }
@@ -163,14 +164,14 @@ class ScraperQuotes:
         return pd.DataFrame(self.quotes_data)
     
     def save_data_as_json(self) -> bool:
-        with open('quotes_data.json', 'w', encoding="utf-8") as json_file:
+        with open('media/quotes_data.json', 'w', encoding="utf-8") as json_file:
             json.dump(self.quotes_data, json_file, indent=4, ensure_ascii=False)
         logger.success("Dados salvos em JSON.")
         notify.objects.create(title="Dados salvos em no formato JSON", 
                               description=f"Foram salvos todos os dados rapados do site: {self.url}")
 
     def save_data_as_xlsx(self) -> bool:
-        file_path = 'quotes_data.xlsx'
+        file_path = 'media/quotes_data.xlsx'
 
         df = pd.DataFrame(self.quotes_data)
         print(df)
