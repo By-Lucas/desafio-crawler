@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="container-fluid">
+
+    <div class="row "> 
+        <div class="col-sm-2 mr-4 mt-4">
+            <h1 class="h3 mb-2 text-gray-800">Agendamentos</h1>
+        </div>
+        <div class="col-sm mt-4">
+            <button href="#" class="btn btn-sm btn-primary float-end" data-toggle="modal" data-target="#refresh-data"><i class="fas fa-plus fa-sm text-white-50"></i> Cadastrar agendamento</button>
+        </div>
+    </div>
+    <!-- Page Heading -->
+    
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Dados baixados via scraping</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered"  width="100%" cellspacing="0">
+                    {% if schedulings %}
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Hora agendamento</th>
+                                <th>Status</th>
+                                <th>Tarefas</th>
+                                <th>Opções</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for schedule in schedulings %}
+                                <tr>
+                                    <td><strong><a href="#" style="text-decoration: none;" data-toggle="modal" data-target="#data-detail-{{data.id}}">{{schedule.name}}</a></strong></td>
+                                    <td>{{schedule.crontab.hour}}:{{schedule.crontab.minute}}</td>
+                                    <td>{% if schedule.enabled %}Ativado{% else %}Desativado{%endif%}</td>
+                                    <td>{{schedule.task}}</td>
+                                    <td>
+                                        <a href="#" class="btn btn-primary" data-toggle="modal" title="Editar" data-target="#schedule-edit-{{data.id}}"><i class="fas fa-edit fa-sm text-white"></i></a>
+                                        <a href="#" class="btn btn-danger" data-toggle="modal" title="Apagar" data-target="#schedule-delete-{{data.id}}"><i class="fas fa-trash fa-sm text-white"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    {% else %}
+                        <h1 class="text-center">Não contém dados cadastrados</h1>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock body %}

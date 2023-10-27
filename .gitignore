@@ -9,7 +9,6 @@ db.sqlite3
 
 # Ignorar diretórios específicos
 node_modules/
-__init__.py
 __pycache__
 
 # Arquivos específicos

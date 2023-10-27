@@ -4,15 +4,30 @@ from loguru import logger
 from datetime import timedelta
 
 from django.utils import timezone
+from django.shortcuts import render
 from django.http import JsonResponse
-from django.shortcuts import redirect, render, get_object_or_404
+from import_export.admin import ImportExportModelAdmin
+from django_celery_beat.admin import PeriodicTaskAdmin
+from django_celery_beat.models import PeriodicTask, IntervalSchedule
 
 from core.models import NotificationsModel
+from data_scrapy.models import ScrapyQuotesModel
+
 
 
 def home(requests):
     template_name = "core/home.html"
-    return render(requests, template_name)
+    data_scrapy = ScrapyQuotesModel.objects.all()
+    notify = NotificationsModel.objects.all()
+    
+    context = {
+        'data_scrapy':data_scrapy.order_by('-created_date'),
+        'data_scrapy_quantity':data_scrapy.count(),
+        'data_scrapy_lasted':notify.order_by('-created_date').first(),
+        'notify_quantity':notify.count(),
+        'tasks_celery_quantity': PeriodicTask.objects.filter(enabled=True).count()
+    }
+    return render(requests, template_name, context)
 
 def get_notifications(request):
     data = {}

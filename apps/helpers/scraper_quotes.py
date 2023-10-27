@@ -149,7 +149,7 @@ class ScraperQuotes:
             logger.info(f"Coletando dados da página {page_number}")
             self.fetch_quotes_on_page(page_url)
             page_number += 1
-            if page_number == 2:
+            if page_number == 3:
                 break
             
         if save_json:

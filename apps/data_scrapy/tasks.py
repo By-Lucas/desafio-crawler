@@ -7,7 +7,7 @@ from core.models import NotificationsModel as notify
 
 
 @shared_task(max_retries=2, queue='update-tasks')
-def uppdate_data() -> bool:
+def update_data() -> bool:
     scrapy = ScraperQuotes()
     scrapy__ = scrapy.run()
     if scrapy:

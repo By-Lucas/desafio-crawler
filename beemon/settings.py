@@ -2,10 +2,7 @@ import os
 import sys
 from pathlib import Path
 from loguru import logger
-from datetime import timedelta
 from decouple import config, Csv
-
-from django.contrib.messages import constants
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +21,6 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 # Pega o ambiente atual
 DJANGO_ENVIRONMENT = config('DJANGO_ENVIRONMENT')
 
-
 # Se o ambiente é 'prod', usa a URL de produção. Caso contrário, usa a URL de QA.
 if DJANGO_ENVIRONMENT == 'prod':
     CELERY_BROKER_URL = config('CELERY_BROKER_URL_PROD')
@@ -35,15 +31,10 @@ else:
     CSRF_TRUSTED_ORIGINS = ['https://beemon-qa.com.br']
     SCHEMA_DB='beemon_sc_test'
     
-
 # Sempre deixara URL principal em primeiro lugar se for utilizar
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
-# Application definition
-
 APPS_DIR = sys.path.append(os.path.join(BASE_DIR, 'apps'))
-
-
 DJANGO_APPS = [
     'jet',
     'jet.dashboard', 
@@ -57,9 +48,9 @@ DJANGO_APPS = [
 ]
 
 THIRD_APPS = [
-    # 'import_export',
-    # 'django_celery_beat',
-    # 'django_celery_results',
+    'import_export',
+    'django_celery_beat',
+    'django_celery_results',
 ]
 
 # New apps added
@@ -67,7 +58,6 @@ PROJECT_APPS = [
     'core',
     'accounts',
     'data_scrapy'
-    # 'rest_framework_simplejwt',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_APPS
@@ -210,15 +200,6 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-# TAGS MESSAGE TEMPLATE
-MESSAGE_TAGS = {
-    constants.DEBUG: 'primary',
-    constants.ERROR: 'danger',
-    constants.SUCCESS: 'success',
-    constants.INFO: 'info',
-    constants.WARNING: 'warning',
-}
 
 #CONN celery
 CELERY_RESULT_BACKEND = 'django-db'
