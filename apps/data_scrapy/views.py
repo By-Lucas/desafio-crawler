@@ -183,60 +183,6 @@ class ScheduleView(View):
         return JsonResponse(data)
             
 
-
-@login_required
-def add_schedule(request):
-    form = ScheduleForm(request.POST)
-    if form.is_valid():
-        company = form.cleaned_data['company']
-        update_time = form.cleaned_data['update_time']
-        _company = Company.objects.get(pk=company.pk)
-        
-        schedule = CrontabSchedule.objects.create(hour=update_time.hour, 
-                                                minute=update_time.minute)
-        
-        task_uuid = uuid.uuid4()
-        task = PeriodicTask.objects.create(crontab=schedule, 
-                                        name=f'Mailing {_company.corporate_name} : {task_uuid}', 
-                                        task='clippings.tasks.send_matters_company', 
-                                        args=json.dumps([_company.id]))
-        
-        existing_schedules = SchedulingTask.objects.filter(company=_company, periodic_task=task, contrabe_scheduler=schedule).first()
-        if existing_schedules:
-            headers = {
-                'status': 201,
-                'HX-Trigger': json.dumps({
-                    "list_schedulings": None,
-                    'bg_color': 'bg-warning',
-                    'showMessage': {
-                        'message': f'Este agendamento já existe.',
-                        'bgClass': 'warning'
-                    }
-                })
-            }
-            return HttpResponse(headers=headers)
-        
-        scheduling_tasks = SchedulingTask.objects.create(company=_company, 
-                                                        periodic_task=task,
-                                                        contrabe_scheduler=schedule)
-
-        headers = {
-            'status': 201,
-            'HX-Trigger': json.dumps({
-                "list_schedulings": None,
-                'bg_color': 'bg-success',
-                'showMessage': {
-                    'message': f'Agendamento cadastrado com sucesso.',
-                    'bgClass': 'success'
-                }
-            })
-        }
-        return HttpResponse(headers=headers)
-       
-    else:
-        return render(request, 'company/includes/form-scheduling.html', {'form': form})
-
-
 @login_required
 def edit_schedule(request, pk):
     schedule = get_object_or_404(SchedulingTask, pk=pk)

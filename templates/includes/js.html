@@ -113,7 +113,25 @@
         updateNotification();
       }, 5000);
     });
-    
+
+     //  LOGS
+     $(document).ready(function() {
+        $("#view-log-button").click(function() {
+            $.ajax({
+                type: "GET",
+                url: "{% url 'view_log' %}",  // Use the correct URL name
+                success: function(response) {
+                    $("#log-content").text(response);
+                    // Show the modal
+                    $("#logModal").modal("show");
+                },
+                error: function() {
+                    $("#log-content").text("Failed to retrieve log data.");
+                }
+            });
+        });
+    });
+
     </script>
 
 

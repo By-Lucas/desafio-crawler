@@ -1,18 +1,16 @@
-import json
-import datetime
+import os
 from loguru import logger
 from datetime import timedelta
 
 from django.utils import timezone
 from django.shortcuts import render
-from django.http import JsonResponse
-from import_export.admin import ImportExportModelAdmin
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from django_celery_beat.admin import PeriodicTaskAdmin
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
 
 from core.models import NotificationsModel
 from data_scrapy.models import ScrapyQuotesModel
-
 
 
 def home(requests):
@@ -55,3 +53,18 @@ def get_notifications(request):
         data['num_notifications'] = 0
     
     return JsonResponse(data)
+
+
+@csrf_exempt
+def view_log(request):
+    log_file_path = 'logs/logs.log'  # Provide the correct path to your log file
+    if os.path.isfile(log_file_path):
+        try:
+            with open(log_file_path, 'r') as log_file:
+                log_content = log_file.read()
+        except FileNotFoundError:
+            log_content = "Log file not found"
+        
+        return HttpResponse(log_content, content_type='text/plain')
+    else:
+        return JsonResponse({'status':500, 'message':'Arquivo de logs ainda não existe'})
