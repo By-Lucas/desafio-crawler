@@ -1,0 +1,83 @@
+<!-- Modal -->
+<div class="modal fade" id="create-scheduling" tabindex="-1" aria-labelledby="create-scheduling-dataLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="create-scheduling-dataLabel">Novo agendamento</h5>
+            <button type="button" class="btn btn-danger rounded-circle" data-dismiss="modal" aria-label="Close">X</button>
+        </div>
+        <form action="" method="post">
+            <div class="modal-body">
+                <label for="">Horário do agendamento</label>
+                {{ form.update_time }}
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            <button type="button" id="btn-update-data" class="btn btn-primary">Cadastrar</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // CREATE ====================================================================
+    $(document).off('click', '#btn-update-data').on('click', '#btn-update-data', function (event) {
+        event.preventDefault();
+        $("#loading").show();
+
+        var url = $(this).data('url');
+        var formData = $('form').serialize();
+
+        $.ajax({
+            url: "{% url 'data_scrapy:scheduling' %}",
+            type: 'POST',
+            data: formData,
+            headers: {
+                'X-CSRFToken': "{{ csrf_token }}"
+            },
+            success: function (data, status, xhr) {
+                $("#loading").hide();
+                $('#create-scheduling').modal('hide');
+                $('#create-scheduling').hide();
+
+                if (data.status === 500) {
+                    showToast('error', data.message);
+                } else if (data.status === 201) {
+                    showToast('success', data.message);
+                    
+                    $("#text-not-data").css("display", "none");
+
+                    var pk = data.schedule.pk;
+                    var new_url = "delete-scheduling/" + pk;
+
+                    // Update the table with the new schedule and buttons
+                    var table = $("table tbody");
+                    var row = "<tr>" +
+                        "<td><strong><a href='#' style='text-decoration: none;'>" + data.schedule.name + "</a></strong></td>" +
+                        "<td>" + data.schedule.hour + ":" + data.schedule.minutes + "</td>" +
+                        "<td>" + (data.schedule.enabled ? 'Ativado' : 'Desativado') + "</td>" +
+                        "<td>" + data.schedule.task + "</td>" +
+                        "<td>" +
+                        "<a href='#' class='btn btn-primary' id='edit-schedule' data-url='' title='Editar agendamento'>" +
+                        "<i class='fas fa-edit fa-sm text-white'></i>" +
+                        "</a>" +
+                        "<a href='#' class='btn btn-danger mx-1' id='delete-schedule' data-url='" + new_url + "' title='Deletar agendamento' data-pk='" + pk + "'>" +
+                        "<i class='fas fa-trash fa-sm text-white'></i>" +
+                        "</a>" +
+                        "</td>" +
+                        "</tr>";
+                    table.append(row);
+
+                }
+            },
+            error: function (data) {
+                $("#loading").hide();
+                showToast('error', 'Ocorreu um erro ao salvar os dados.');
+            }
+        });
+    });
+
+
+
+ </script>

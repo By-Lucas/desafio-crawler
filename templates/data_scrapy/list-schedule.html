@@ -9,7 +9,7 @@
             <h1 class="h3 mb-2 text-gray-800">Agendamentos</h1>
         </div>
         <div class="col-sm mt-4">
-            <button href="#" class="btn btn-sm btn-primary float-end" data-toggle="modal" data-target="#refresh-data"><i class="fas fa-plus fa-sm text-white-50"></i> Cadastrar agendamento</button>
+            <button href="#" class="btn btn-sm btn-primary float-end" data-toggle="modal" data-target="#create-scheduling"><i class="fas fa-plus fa-sm text-white-50"></i> Cadastrar agendamento</button>
         </div>
     </div>
     <!-- Page Heading -->
@@ -18,44 +18,118 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Dados baixados via scraping</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Agendar atualização dos dados</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered"  width="100%" cellspacing="0">
-                    {% if schedulings %}
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Hora agendamento</th>
-                                <th>Status</th>
-                                <th>Tarefas</th>
-                                <th>Opções</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for schedule in schedulings %}
+                {% if schedulings %}
+                    <table class="table table-bordered"  width="100%" cellspacing="0">
+                            <thead>
                                 <tr>
-                                    <td><strong><a href="#" style="text-decoration: none;" data-toggle="modal" data-target="#data-detail-{{data.id}}">{{schedule.name}}</a></strong></td>
-                                    <td>{{schedule.crontab.hour}}:{{schedule.crontab.minute}}</td>
-                                    <td>{% if schedule.enabled %}Ativado{% else %}Desativado{%endif%}</td>
-                                    <td>{{schedule.task}}</td>
-                                    <td>
-                                        <a href="#" class="btn btn-primary" data-toggle="modal" title="Editar" data-target="#schedule-edit-{{data.id}}"><i class="fas fa-edit fa-sm text-white"></i></a>
-                                        <a href="#" class="btn btn-danger" data-toggle="modal" title="Apagar" data-target="#schedule-delete-{{data.id}}"><i class="fas fa-trash fa-sm text-white"></i></a>
-                                    </td>
+                                    <th>Nome</th>
+                                    <th>Hora agendamento</th>
+                                    <th>Status</th>
+                                    <th>Tarefas</th>
+                                    <th>Opções</th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    {% else %}
-                        <h1 class="text-center">Não contém dados cadastrados</h1>
-                    {% endif %}
-                </table>
+                            </thead>
+                            <tbody>
+                                {% for schedule in schedulings %}
+                                    <tr>
+                                        <td><strong><a href="#" style="text-decoration: none;">{{schedule.name}}</a></strong></td>
+                                        <td>{{schedule.crontab.hour}}:{{schedule.crontab.minute}}</td>
+                                        <td>{% if schedule.enabled %}Ativado{% else %}Desativado{%endif%}</td>
+                                        <td>{{schedule.task}}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-primary" id="edit-schedule"  data-url="" title="Editar agendamento"><i class="fas fa-edit fa-sm text-white"></i></a>
+                                            <a href="#" class="btn btn-danger" id="delete-schedule"  title="Apagar" data-url="{% url 'data_scrapy:delete_schedule' schedule.pk %}" title="Deletar agendamento"><i class="fas fa-trash fa-sm text-white"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                {% endif %}
+                {% if not schedulings %}
+                    <h1 class="text-center" id="text-not-data" style="display: block;">Não contém dados cadastrados</h1>
+                {% endif %}
             </div>
         </div>
     </div>
 
 </div>
+
+{% include 'data_scrapy/includes/modal-create-schedule.html' %}
+
+
+<script>
+
+    // DELETE ====================================================================
+    $(document).off('click', '#delete-schedule').on('click', '#delete-schedule', function (event) {
+    event.preventDefault();
+    $("#loading").show();
+
+    var url = $(this).data('url');
+    var formData = $('form').serialize();
+    console.log(url);
+
+    $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: formData,
+        headers: {
+            'X-CSRFToken': "{{ csrf_token }}"
+        },
+        success: function (data, status, xhr) {
+            $("#loading").hide();
+
+            if (data.schedules) {
+                // Update the table with the updated data
+                var table = $("table tbody");
+                table.empty();
+                data.schedules.forEach(function(schedule) {
+
+                    var pk = schedule.pk;
+                    var new_url = "delete-scheduling/" + pk;
+
+                    // Create a row for each schedule
+                    var table = $("table tbody");
+
+                    var row = "<tr>" +
+                        "<td><strong><a href='#' style='text-decoration: none;'>" + schedule.name + "</a></strong></td>" +
+                        "<td>" + schedule.hour + ":" + schedule.minutes + "</td>" +
+                        "<td>" + (schedule.enabled ? 'Ativado' : 'Desativado') + "</td>" +
+                        "<td>" + schedule.task + "</td>" +
+                        "<td>" +
+                        "<a href='#' class='btn btn-primary' id='edit-schedule' data-url='' title='Editar agendamento'>" +
+                        "<i class='fas fa-edit fa-sm text-white'></i>" +
+                        "</a>" +
+                        "<a href='#' class='btn btn-danger mx-1' id='delete-schedule' data-url='" + new_url + "' title='Deletar agendamento' data-pk='" + pk + "'>" +
+                        "<i class='fas fa-trash fa-sm text-white'></i>" +
+                        "</a>" +
+                        "</td>" +
+                        "</tr>";
+
+                    table.append(row);
+                });
+            } else {
+                 // Update the table with a message if there are no schedules
+                var table = $("table tbody");
+                table.empty();
+                var row = '<h1 class="text-center" id="text-not-data" style="display: block;">Não contém dados cadastrados</h1>';
+                table.append(row);
+            }
+
+            showToast('success', data.message);
+        },
+        error: function (data) {
+            $("#loading").hide();
+            showToast('error', 'Ocorreu um erro ao deletar agendamento.');
+        }
+    });
+});
+
+
+</script>
 
 
 {% endblock body %}

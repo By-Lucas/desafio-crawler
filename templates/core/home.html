@@ -165,5 +165,52 @@
 {% include 'core/includes/modal-data-detail.html' %}
 {% include 'core/includes/modal-refresh-data.html' %}
 
+
+<!-- ############### DOWNLOAD DATA ############### -->
+<script>
+    function downloadData(format) {
+      // Define the URL for your download view with the selected format
+      const url = "{% url 'data_scrapy:download_data' 'format' %}".replace('format', format);
+      
+  
+      // Use the Fetch API to make the asynchronous request
+      fetch(url)
+        .then((response) => {
+          if (response.ok) {
+            // Create a temporary anchor element to trigger the download
+            const contentDisposition = response.headers.get('Content-Disposition');
+            const filename = contentDisposition.split('filename=')[1] || 'data.' + format;
+  
+  
+            response.blob().then((blob) => {
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.style.display = 'none';
+              a.href = url;
+              a.download = filename;
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+            });
+          } else {
+            console.error('Download failed.');
+          }
+        })
+        .catch((error) => {
+          console.error('Fetch error:', error);
+        });
+    }
+  
+    document.getElementById('download-csv').addEventListener('click', () => {
+      downloadData('csv');
+    });
+    document.getElementById('download-json').addEventListener('click', () => {
+      downloadData('json');
+    });
+    document.getElementById('download-xlsx').addEventListener('click', () => {
+      downloadData('xlsx');
+    });
+</script>
+
 {% endblock body %}
 <!-- /.container-fluid -->

@@ -147,6 +147,8 @@ class ScheduleView(View):
         return render(request, 'data_scrapy/list-schedule.html', context)
     
     def post(self, request, *args, **kwargs):
+        update_time = request.POST.get('update_time', "")
+            
         form = ScheduleForm(request.POST)
         if form.is_valid():
             update_time = form.cleaned_data['update_time']
@@ -160,11 +162,28 @@ class ScheduleView(View):
             
             if task:
                 data = {
-                    'status': 201,
-                    'message': 'Tarefa agendada com sucesso.',
+                'status': 201,
+                'message': 'Tarefa agendada com sucesso.',
+                'schedule': {
+                    'name': task.name,
+                    'hour': task.crontab.hour,
+                    'minutes': task.crontab.minute,
+                    'enabled': task.enabled,
+                    'task': task.task,
+                    'pk': task.pk,
                 }
-                return JsonResponse(data)
-        
+            }
+                #return JsonResponse(data)
+        else:
+            if not update_time:
+                data = {
+                        'status': 500,
+                        'message': 'Por favor informe um horário válido',
+                    }
+        return JsonResponse(data)
+            
+
+
 @login_required
 def add_schedule(request):
     form = ScheduleForm(request.POST)
@@ -268,38 +287,25 @@ def edit_schedule(request, pk):
 
 
 def delete_schedule(request, pk):
-    template_name = "company/includes/modal-delete-schedule.html"
-    schedule = get_object_or_404(SchedulingTask, pk=pk)
-    schedule_celery = get_object_or_404(PeriodicTask, pk=schedule.periodic_task.pk)
-    context = {}
-    context['schedule']=schedule
-    context['schedule_celery']=schedule_celery
-
-    if request.method == "DELETE":
-        if schedule and schedule_celery:
-            schedule.delete()
-            schedule_celery.delete()
-            headers = {
-                'status': 204,
-                'HX-Trigger': json.dumps({
-                    "list_schedulings": 'list_schedulings',
-                    'bg_color': 'bg-success',
-                    'showMessage': {
-                        'message': f'Agendamento deletado com sucesso.',
-                        'bgClass': 'success'
-                    }
-                })
-            }
-            return HttpResponse(headers=headers)
-        else:
-            headers = {
-                    'status': 404,
-                    'HX-Trigger': json.dumps({
-                        "list_emails_mailings": None,
-                        'bg_color': 'bg-danger',
-                        'showMessage': {
-                            'message': f'Erro: Agendamento não encontrado',
-                            'bgClass': 'danger'}})}
-            return HttpResponse(headers=headers)
+    schedule_celery = get_object_or_404(PeriodicTask, pk=pk)
     
-    return render(request, template_name, context)
+    if request.method == "DELETE":
+        data = {}
+        if schedule_celery:
+            schedule_celery.delete()
+            
+            updated_schedules = PeriodicTask.objects.all()
+
+            # Serialize the updated list of schedules
+            if updated_schedules:
+                datas = [{"name": schedule.name, "hour": schedule.crontab.hour, 'minutes': schedule.crontab.minute,  'enabled':schedule.enabled, 'task': schedule.task, "pk": schedule.pk} for schedule in updated_schedules]
+                data = {'schedules': datas, 'message':'Agendamento deletado com sucesso.', 'status':204}
+                
+        else:
+            data = {
+                'status': 204,
+                'schedules': [],
+                'message': f'Agendamento não encontrado'
+            }
+        return JsonResponse(data)
+    
