@@ -1,6 +1,8 @@
+import os
 import uuid
 import json
 import datetime
+import pandas as pd
 from loguru import logger
 from threading import Thread
 
@@ -65,22 +67,67 @@ class QuotesDataframe(View):
         return render(request, self.template_name, {'data': []})
         
     def post(self, request, *args, **kwargs):
-        sidebar_config = True
-        scrapy__ = scrapy.run(save_xlsx=True)
+        quotes_data = 'media/quotes_data.xlsx'
         try:
-            dataframe = scrapy.show_dataframe().to_dict(orient='records')
-            logger.success('Dados atualizados com sucesso')
+            if os.path.isfile(quotes_data):
+                dataframe = pd.read_excel(quotes_data).to_dict(orient='records')
+                logger.success('Upload realizado com sucesso.')
+            else:
+                scrapy__ = scrapy.run(save_xlsx=True)
+                dataframe = scrapy.show_dataframe().to_dict(orient='records')
                 
-            notify.objects.create(title="Dados atualizados com sucesso", 
-                                description="Os dados raspadaos do site quotes foram atualizados com sucesso.")
-            
+                logger.success('Dados atualizados com sucesso.')
+                notify.objects.create(title="Dados atualizados com sucesso", 
+                                description="Os dados raspados do site quotes foram atualizados com sucesso")
+                
+            # Truncate the "Description" column to 80 characters and add '...' if needed
+            for entry in dataframe:
+                if 'Description' in entry and len(entry['Description']) > 80:
+                    entry['Description'] = entry['Description'][:77] + '...'
+                
+                if 'text' in entry and len(entry['text']) > 40:
+                    entry['text'] = entry['text'][:40] + '...'
+
             return JsonResponse({'dataframe': dataframe})
-            #return render(request, self.template_name, {'data': dataframe})
-        
+            
         except ScrapyQuotesModel.DoesNotExist:
             logger.error('A model ScrapyQuotesModel não existe ou ainda não foi criada')
-        
+            return JsonResponse({'dataframe': [],' message':'A models ScrapyQuotesModel ainda não existe, por favor crie-a antes de atualizar'})
 
+
+def download_data(request, format):
+    file_format = format
+    # Fetch your data from the database or use the existing DataFrame
+    queryset = ScrapyQuotesModel.objects.all()
+    news_data = pd.DataFrame(list(queryset.values()))
+    
+    date_now = datetime.datetime.now()
+    date_now = date_now.strftime('%d-%m-%Y')
+
+    if file_format not in ['xlsx', 'csv', 'json']:
+        return HttpResponse(status=400)
+
+    date_now = datetime.date.today()
+    date_now = date_now.strftime("%d-%m-%Y")
+    name_download = f"quotes_data_{date_now}"
+
+    if file_format == 'xlsx':
+        response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        response['Content-Disposition'] = f'attachment; filename="{name_download}.xlsx'
+        news_data.to_excel(response, index=False, engine="openpyxl")
+
+    if file_format == 'csv':
+        response = HttpResponse(content_type="text/csv")
+        response['Content-Disposition'] = f'attachment; filename="{name_download}.csv'
+        news_data.to_csv(response, index=False)
+
+    if file_format == 'json':
+        response = HttpResponse(content_type="application/json")
+        response['Content-Disposition'] = f'attachment; filename="{name_download}.json'
+        response.write(news_data.to_json(orient="records"))
+
+    return response
+    
 
 class ScheduleView(View):
     

@@ -1,12 +1,9 @@
-{% extends 'base.html' %}
-
-{% block body %}
-
-<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-scrollable">
+{% csrf_token %}
+<div class="modal fade" id="modal-dataframe" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-fullscreen-sm-down modal-dialog-scrollable">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+            <h5 class="modal-title" id="staticBackdropLabel">Dataframe</h5>
             <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="modal-data-body">
@@ -15,18 +12,15 @@
             </table>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <buttontype="button" class="btn btn-primary">Understood</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
         </div>
         </div>
     </div>
 </div>
 
-<button id="openModalButton" type="button">Abrir Modal</button>
-
 <script>
    $(document).ready(function() {
-    $('#openModalButton').on('click', function () {
+    $('#quotes-dataframe').on('click', function () {
         $("#loading").show();
         // AJAX request to get the data
         $.ajax({
@@ -38,8 +32,7 @@
           },
             success: function (data) {
                 $("#loading").hide();
-                $('#staticBackdrop').modal('show');
-                
+                $('#modal-dataframe').modal('show');
                 if (data.dataframe) {
                     // Generate the HTML for the table
                     var tableHTML = '<table class="table table-bordered" width="100%" cellspacing="0"><thead><tr>';
@@ -62,14 +55,12 @@
                     $('#modal-data-body').html(tableHTML);
 
                     showToast('success', 'Upload feito com sucesso');
-
                 }
             },
             error: function (error) {
                 $("#loading").hide();
-                $('#staticBackdrop').modal('hide');
+                $('#modal-quotes-dataframe').modal('hide');
                 showToast('error', 'Erro ao fazer upload : '+ error);
-
 
                 // Handle errors if the AJAX request fails
             }
@@ -77,8 +68,6 @@
     });
 });
 
-
 </script>
 
 
-{% endblock body %}

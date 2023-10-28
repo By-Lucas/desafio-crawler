@@ -12,8 +12,18 @@
     
     <div class="d-sm-flex  justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Beemon Tech</h1>
-        <a href="#" class="float-right d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-            class="fas fa-download fa-sm text-white-50"></i> Download</a>
+
+        <div class="btn-group" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <i
+                class="fas fa-download fa-sm text-white-50"></i> Download
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                <li><a id="download-csv" class="dropdown-item" href="#">CSV</a></li>
+                <!-- <li><a id="download-xlsx" class="dropdown-item" href="#">XLSX</a></li> -->
+                <li><a id="download-json" class="dropdown-item" href="#">JSON</a></li>
+            </ul>
+        </div>
     </div>
 
     <!-- Content Row -->
@@ -99,8 +109,11 @@
         <div class="col-sm-1 mr-4">
             <h1 class="h3 mb-2 text-gray-800">Dados</h1>
         </div>
-        <div class="col-sm">
-            <button href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#refresh-data"><i class="fas fa-sync-alt fa-sm text-white-50"></i> Atualizar</button>
+        <div class="col-sm-1">
+            <button  class="btn btn-sm btn-primary" data-toggle="modal" data-target="#refresh-data"><i class="fas fa-sync-alt fa-sm text-white-50"></i> Atualizar</button>
+        </div>
+        <div class="col-sm-2">
+            <button  class="btn btn-sm btn-primary" id="quotes-dataframe" ><i class="fas fa-search fa-sm text-white-50"></i> Virualizar dataframe</button>
         </div>
     </div>
     <!-- Page Heading -->
@@ -147,6 +160,7 @@
 
 </div>
 
+{% include 'core/includes/modal-quotes-dataframe.html' %}
 
 {% include 'core/includes/modal-data-detail.html' %}
 {% include 'core/includes/modal-refresh-data.html' %}

@@ -7,5 +7,5 @@ urlpatterns = [
     path('create', views.QuotesViews.as_view(), name='create_data'),
     path('scheduling', views.ScheduleView.as_view(), name='scheduling'),
     path('quotes-dataframe', views.QuotesDataframe.as_view(), name='quotes_dataframe'),
-    
+    path('download/<str:format>/', views.download_data, name='download_data'),
 ]
