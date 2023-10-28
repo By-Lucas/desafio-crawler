@@ -22,37 +22,35 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                {% if schedulings %}
-                    <table class="table table-bordered"  width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Hora agendamento</th>
-                                    <th>Status</th>
-                                    <th>Tarefas</th>
-                                    <th>Opções</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for schedule in schedulings %}
-                                    <tr>
-                                        <td><strong><a href="#" style="text-decoration: none;">{{schedule.name}}</a></strong></td>
-                                        <td>{{schedule.crontab.hour}}:{{schedule.crontab.minute}}</td>
-                                        <td>{% if schedule.enabled %}Ativado{% else %}Desativado{%endif%}</td>
-                                        <td>{{schedule.task}}</td>
-                                        <td>
-                                            <a href="#" class="btn btn-primary" id="edit-schedule"  data-url="" title="Editar agendamento"><i class="fas fa-edit fa-sm text-white"></i></a>
-                                            <a href="#" class="btn btn-danger" id="delete-schedule"  title="Apagar" data-url="{% url 'data_scrapy:delete_schedule' schedule.pk %}" title="Deletar agendamento"><i class="fas fa-trash fa-sm text-white"></i></a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                    </table>
-                {% endif %}
-                {% if not schedulings %}
-                    <h1 class="text-center" id="text-not-data" style="display: block;">Não contém dados cadastrados</h1>
-                {% endif %}
+                <table class="table table-bordered"  width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Hora agendamento</th>
+                            <th>Status</th>
+                            <th>Tarefas</th>
+                            <th>Opções</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for schedule in schedulings %}
+                            <tr>
+                                <td><strong><a href="#" style="text-decoration: none;">{{schedule.name}}</a></strong></td>
+                                <td>{{schedule.crontab.hour}}:{{schedule.crontab.minute}}</td>
+                                <td>{% if schedule.enabled %}Ativado{% else %}Desativado{%endif%}</td>
+                                <td>{{schedule.task}}</td>
+                                <td>
+                                    <a href="#" class="btn btn-primary" id="edit-schedule"  data-url="" title="Editar agendamento"><i class="fas fa-edit fa-sm text-white"></i></a>
+                                    <a href="#" class="btn btn-danger" id="delete-schedule"  title="Apagar" data-url="{% url 'data_scrapy:delete_schedule' schedule.pk %}" title="Deletar agendamento"><i class="fas fa-trash fa-sm text-white"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
+            {% if not schedulings %}
+                <h1 class="text-center" id="text-not-data" style="display: block;">Não contém dados cadastrados</h1>
+            {% endif %}
         </div>
     </div>
 
@@ -110,6 +108,8 @@
                         "</tr>";
 
                     table.append(row);
+
+
                 });
             } else {
                  // Update the table with a message if there are no schedules
@@ -119,7 +119,7 @@
                 table.append(row);
             }
 
-            showToast('success', data.message);
+            showToast('success', "Agendamento deletado com sucesso.");
         },
         error: function (data) {
             $("#loading").hide();

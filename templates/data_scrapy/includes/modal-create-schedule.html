@@ -45,7 +45,6 @@
                     showToast('error', data.message);
                 } else if (data.status === 201) {
                     showToast('success', data.message);
-                    
                     $("#text-not-data").css("display", "none");
 
                     var pk = data.schedule.pk;
