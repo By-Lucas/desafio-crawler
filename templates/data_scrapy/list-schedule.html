@@ -40,7 +40,6 @@
                                 <td>{% if schedule.enabled %}Ativado{% else %}Desativado{%endif%}</td>
                                 <td>{{schedule.task}}</td>
                                 <td>
-                                    <a href="#" class="btn btn-primary" id="edit-schedule"  data-url="" title="Editar agendamento"><i class="fas fa-edit fa-sm text-white"></i></a>
                                     <a href="#" class="btn btn-danger" id="delete-schedule"  title="Apagar" data-url="{% url 'data_scrapy:delete_schedule' schedule.pk %}" title="Deletar agendamento"><i class="fas fa-trash fa-sm text-white"></i></a>
                                 </td>
                             </tr>
