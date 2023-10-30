@@ -35,5 +35,7 @@ venv/
 
 scraper_quotes_test.py
 *.json
-*.xlsx
 .env-prod
+*.bak
+*.dat
+*.dir
