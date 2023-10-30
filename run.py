@@ -21,7 +21,7 @@ class Bot(Thread, ScraperQuotes):
         logger.success('Bot iniciado.')
         try:
             data = self.run_scraper(save_json=True, save_xlsx=True, quantity_page=2)
-            print(self.show_dataframe())
+            print(self.show_dataframe()) # Exibir dataframe
         finally:
             logger.info('Processo finalizado')
             
