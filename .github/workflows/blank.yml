@@ -28,6 +28,13 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
+      
+      - name: Retrieving Github Secrets
+        shell: bash
+        run: |
+          for i in "$SECRETS_CONTEXT"; do echo "$i" | sed '/^.*{.*$/d' | sed '/^.*}.*$/d' | sed 's/,//' | sed 's/: /=/' | sed 's/\"//g' | sed 's/  //' >> .env; done
+        env:
+          SECRETS_CONTEXT: ${{ toJson(secrets) }}
 
       - name: Upgrade pip
         run: pip install --upgrade pip
