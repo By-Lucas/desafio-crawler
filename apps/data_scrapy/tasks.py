@@ -6,11 +6,6 @@ from data_scrapy.models import ScrapyQuotesModel
 from core.models import NotificationsModel as notify
 #from beemon.celery import app
 
-@shared_task(max_retries=1, queue='update-tasks')
-def teste_celery(*args):
-    logger.success('FUNCAO DE TESTE: TEXT:', args)
-    return True
-
 
 @shared_task(max_retries=3, queue='update-tasks', default_retry_delay=1)
 def update_data():

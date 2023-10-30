@@ -1,21 +1,27 @@
 FROM python:3.9-slim
 
+# Install the PostgreSQL development libraries and build tools
+RUN apt-get update && apt-get install -y libpq-dev gcc && apt-get clean
+
+# Defina variáveis de ambiente
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Copie o código-fonte do projeto
+COPY . /app/
+
+# Defina o diretório de trabalho
 WORKDIR /app
 
-COPY requirements.txt .
+# Instale as dependências do projeto
+COPY requirements.txt /app/
 
-RUN pip install --upgrade pip
+# Atualiza o Pip
+RUN python -m pip install --upgrade pip
 
+# Limpa o cache e remove dependências
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install psycopg2-binary
-
-COPY . .
-
-COPY start.sh .
-
+# Entrypoint de inicialização do app
 RUN chmod +x start.sh
-
-EXPOSE 8000
-
-CMD ["./start.sh"]
+ENTRYPOINT ["/bin/sh", "start.sh"]

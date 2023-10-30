@@ -27,6 +27,7 @@ def home(requests):
     }
     return render(requests, template_name, context)
 
+
 def get_notifications(request):
     data = {}
     try:

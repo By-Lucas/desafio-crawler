@@ -33,7 +33,7 @@ settings/local.py
 # Ambiente virtual (se você estiver usando venv)
 venv/
 
-test_scraper_quotes.py
+scraper_quotes_test.py
 *.json
 *.xlsx
 .env-prod

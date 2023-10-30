@@ -34,9 +34,14 @@ pip install -r requirements.txt
 python -m tests
 ```
 
-- **Executar o `projeto com DOCKER`**
+- **Criar imagem`DOCKER`**
 ```
-docker run beemon
+docker build -t beemon .
+```
+
+- **Executar projeto**
+```
+docker run -p 8080:8080 beemon
 ```
 
 - **Executar o `projeto via django`**

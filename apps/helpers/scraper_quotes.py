@@ -15,6 +15,7 @@ class ScraperQuotes:
         self.quotes_data = []
     
     def fetch_html(self, url):
+        """Faz uma requisição para URL passada como parâmetro"""
         response = requests.get(url)
         if response.status_code == 200:
             return response.text
@@ -101,7 +102,7 @@ class ScraperQuotes:
             return None
 
     def fetch_quotes_on_page(self, page_url) -> None:
-        """Faz solicitção diretna na url passada como prâmetro"""
+        """Faz solicitção direta na url passada como prâmetro e percorre as paginas"""
         html = self.fetch_html(page_url)
         page_soup = bs(html, 'html.parser')
 
@@ -134,8 +135,8 @@ class ScraperQuotes:
                 }
                 self.quotes_data.append(quote_data)
                 
-    def run(self, save_json=None, save_xlsx=None) -> list:
-        """Inicia o scraping e faz a paginação"""
+    def run(self, save_json=None, save_xlsx=None, quantity_page:int=0) -> list:
+        """Inicia o scraping e faz a paginação\nsave_json: Salvar no formato JSON\nsave_xlsxs: Salvar no formato xlsxs\nquantity_page: Quantidade de paginas a serem percorridas"""
         page_number = 1
 
         while True:
@@ -145,12 +146,13 @@ class ScraperQuotes:
 
             # Verifica se há citações na página atual
             if not page_soup.find("span", class_="text"):
-                break  # Sai do loop se não houver mais citações
+                break
 
             logger.info(f"Coletando dados da página {page_number}")
             self.fetch_quotes_on_page(page_url)
             page_number += 1
-            if page_number == 3:
+            
+            if page_number == quantity_page:
                 break
             
         if save_json:
@@ -161,18 +163,21 @@ class ScraperQuotes:
         return self.quotes_data
 
     def show_dataframe(self) -> pd.DataFrame:
+        """Retornar visualização em Dataframe"""
         return pd.DataFrame(self.quotes_data)
     
     def save_data_as_json(self) -> bool:
-        with open('media/quotes_data.json', 'w', encoding="utf-8") as json_file:
+        """Salvar Json"""
+        file_path = 'media/quotes_data.json'
+        with open(file_path, 'w', encoding="utf-8") as json_file:
             json.dump(self.quotes_data, json_file, indent=4, ensure_ascii=False)
         logger.success("Dados salvos em JSON.")
         notify.objects.create(title="Dados salvos em no formato JSON", 
                               description=f"Foram salvos todos os dados rapados do site: {self.url}")
 
     def save_data_as_xlsx(self) -> bool:
+        """Salvar Xlsx"""
         file_path = 'media/quotes_data.xlsx'
-
         df = pd.DataFrame(self.quotes_data)
         print(df)
         df.to_excel(file_path, index=False)

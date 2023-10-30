@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from helpers.base_models import BaseModelTimestamp
+from apps.helpers.base_models import BaseModelTimestamp
 
 
 class ScrapyQuotesModel(BaseModelTimestamp):
