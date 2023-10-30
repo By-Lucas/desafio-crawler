@@ -2,7 +2,7 @@
 
 # Executar celery
 celery -A beemon worker --loglevel=INFO -Q update-tasks --concurrency=1 --without-gossip --without-mingle -O fair & \
-celery -A beemon beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler & \ 
+celery -A beemon beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler & \
 python manage.py migrate
 
 # Coletar arquivos estáticos
