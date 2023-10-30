@@ -7,6 +7,8 @@
 - *`celery` para agendamento dinámicos e escalável para o projeto, dando a disponibilidade para multiplos agendamentos e muitas funcionalidades úteis.*
 - *`IMPORTANTE`: Não foi utilziado o `SELENIUM` pelo simples motivo de que a documentação pedia rapidez no script e como o site disponibilzava todos os benefícios a favor do `BEAUTIFULSOUP4`, então dispensei o `SELENIUM` para que o projeto não demorasse na capitura das informações. Mas o `SELENIUM` poderia ser facilmetne utilizado para fazer a abertuda do site e passar para `BS4` o `HTML` da página e assim ser mais ágil na raspagem de dados. Outro motivo de não ter utilizado o selenium é que para execução adequada iria utilizar o `SELENOID` como servidor para o mesmo, e na execução local talvez criasse uma dificuldade desnecessária já que sua configuração não é exatamente o foco do teste em sí.*
 
+- O projeto web utilizao o banco de dados RENDER, ele tem limitações de uso, pode ser que na atualização ele faça uma desconexão, devido ser um plano GRATIS ele não suporta uma certa quantidade de movimtentação no banco.
+
 # COMO CONFIGURAR E EXECUTA?
 - **Crie ambiente virtual e instale as dependências**
 ```
