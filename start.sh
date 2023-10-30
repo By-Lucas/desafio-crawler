@@ -9,5 +9,5 @@ python manage.py migrate
 python manage.py collectstatic --noinput
 
 # Iniciar o servidor Gunicorn
-gunicorn beemon.wsgi:application --bind 0.0.0.0:8080
+gunicorn beemon.wsgi:application --bind 0.0.0.0:$PORT
 #--bind 0.0.0.0:$PORT
