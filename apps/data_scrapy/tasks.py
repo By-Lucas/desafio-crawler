@@ -4,10 +4,18 @@ from celery import shared_task
 from helpers.scraper_quotes import ScraperQuotes
 from data_scrapy.models import ScrapyQuotesModel
 from core.models import NotificationsModel as notify
+#from beemon.celery import app
+
+@shared_task(max_retries=1, queue='update-tasks')
+def teste_celery(*args):
+    logger.success('FUNCAO DE TESTE: TEXT:', args)
+    return True
 
 
-@shared_task(max_retries=2, queue='update-tasks')
-def update_data() -> bool:
+@shared_task(max_retries=3, queue='update-tasks', default_retry_delay=1)
+def update_data():
+    logger.success('Iniciando atualização de dados agendada')
+    
     scrapy = ScraperQuotes()
     scrapy__ = scrapy.run()
     if scrapy:

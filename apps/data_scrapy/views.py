@@ -11,7 +11,7 @@ from django.views.generic.edit import CreateView
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django_celery_beat.models import CrontabSchedule, PeriodicTask
+from django_celery_beat.models import CrontabSchedule, PeriodicTask, IntervalSchedule
 
 from .forms import ScheduleForm
 from data_scrapy.models import ScrapyQuotesModel
@@ -238,6 +238,8 @@ def delete_schedule(request, pk):
     if request.method == "DELETE":
         data = {}
         if schedule_celery:
+            if schedule_celery.crontab:
+                schedule_celery.crontab.delete()
             schedule_celery.delete()
             
             updated_schedules = PeriodicTask.objects.all()
