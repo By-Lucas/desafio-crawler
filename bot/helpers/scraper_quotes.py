@@ -5,6 +5,8 @@ import pandas as pd
 from loguru import logger
 from decouple import config
 from bs4 import BeautifulSoup as bs
+from bot.database.db import save_data_to_postgresql, create_database_table
+
 
 
 class ScraperQuotes:
@@ -130,8 +132,9 @@ class ScraperQuotes:
                     "Description": description.text
                 }
                 self.quotes_data.append(quote_data)
+
                 
-    def run_scraper(self, save_json=None, save_xlsx=None, quantity_page:int=0) -> list:
+    def run_scraper(self, save_json=None, save_xlsx=None, save_database=None, quantity_page:int=0) -> list:
         """Inicia o scraping e faz a paginação\nsave_json: Salvar no formato JSON\nsave_xlsxs: Salvar no formato xlsxs\nquantity_page: Quantidade de paginas a serem percorridas"""
         page_number = 1
 
@@ -155,6 +158,10 @@ class ScraperQuotes:
             self.save_data_as_json()
         if save_xlsx:
             self.save_data_as_xlsx()
+        if save_database:
+            create_tables = create_database_table()
+            save_data = save_data_to_postgresql(self.quotes_data)
+            logger.success('Dados salvo no banco de dados.')
             
         return self.quotes_data
 

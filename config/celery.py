@@ -1,11 +1,10 @@
-import os
 import sys
 import configparser
 from loguru import logger
 from decouple import config
 
-from celery import Celery, shared_task
 from celery.schedules import crontab
+from celery import Celery, shared_task
 
 from bot.helpers.scraper_quotes import ScraperQuotes
 
@@ -14,17 +13,13 @@ logger.add("logs/logs.log",  serialize=False)
 logger.add(sys.stdout, colorize=True, format="<green>{time}</green> <level>{message}</level>", backtrace=True, diagnose=True)
 logger.opt(colors=True)
 
-
 config_ini = configparser.ConfigParser()
 config_ini.read('config/config.ini')
 
 HOUR = config_ini['CONFIG']['UPDATE_HOUR']
 MINUTES = config_ini['CONFIG']['UPDATE_MINUTES']
-
-
 CELERY_BROKER_URL = config('CELERY_BROKER_URL')
 
-print(CELERY_BROKER_URL)
 app = Celery('bot', broker=CELERY_BROKER_URL)
 app.conf.update(result_expires=3600, 
                 enable_utc=True,
@@ -44,21 +39,10 @@ def scrape_quotes():
     return data
 
 
-# @shared_task
-# def scrape_data():
-#     logger.success("Scraping agendado iniciado")
-#     url = config("URL_QUOTES")
-#     scraper = ScraperQuotes(url)
-#     data = scraper.run_scraper(save_json=True, save_xlsx=True, quantity_page=2)
-#     logger.info("Scraping agendado completo")
-#     return data
-
-
 app.conf.beat_schedule = {
     'update_data': {
-        'task': 'config.celery.scrape_quotes',  # Atualize para o caminho correto da sua tarefa
+        'task': 'config.celery.scrape_quotes',
         'schedule': crontab(hour=16, minute=37),
-        'args': (),  # Exemplo de passagem de IDs (1, 2, 3)
+        'args': (),
     }
 }
-
