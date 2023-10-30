@@ -133,7 +133,6 @@ class ScraperQuotes:
                 }
                 self.quotes_data.append(quote_data)
 
-                
     def run_scraper(self, save_json=None, save_xlsx=None, save_database=None, quantity_page:int=0) -> list:
         """Inicia o scraping e faz a paginação\nsave_json: Salvar no formato JSON\nsave_xlsxs: Salvar no formato xlsxs\nquantity_page: Quantidade de paginas a serem percorridas"""
         page_number = 1
