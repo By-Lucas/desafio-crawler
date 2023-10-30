@@ -36,36 +36,11 @@ python -m tests
 
 - **Criar imagem`DOCKER`**
 ```
-docker build -t beemon .
+docker build -t scrapy .
 ```
 
 - **Executar projeto**
 ```
-docker run -p 8080:8080 beemon
+docker run scrapy
 ```
 
-- **Executar o `projeto via django`**
-```
-python manage.py runserver
-```
-
-## INFORMAÇÕES VISUAL
-- **IMAGEM DA PAGINA INICIAL**
-<img src="media/img-1.png">
-
-- **IMAGEM DA PAGINA DE AGENDAMENTO**
-<img src="media/img-2.png">
-
-- **IMAGEM DO MODAL DE LOGS**
-<img src="media/img-3.png">
-
-- **IMAGEM DA TELEA DE LOGS DIRETO NO NAVEGADOR**
-<img src="media/img-4.png">
-
-- **IMAGEM DA PAGINA ADMINISTRATIVA DO DJANGO**<br>
-*Nessa parte fica o contreole geral da adminstração do django, onde usuparios permitidos tem acesso e logs do CELERY e logs dos usuários e suas movimentações dentro do sistema.*
-<img src="media/img-5.png">
-
-- **POR ULTIMO - IMAGEM DO `GITHUB ENVIROMENT`**
-*Os dados sensíveis foram adicionados no github para segurança do projeto, mas pode criar essas mesmas crendenciais e seguir o modelo base deixado em .env-example para fazer o teste local*
-<img src="media/ENVIROMENT-GITHUB.png">
