@@ -35,7 +35,6 @@ venv/
 
 scraper_quotes_test.py
 .pytest_cache
-*.json
 .env-prod
 *.bak
 *.dat
