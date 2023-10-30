@@ -179,7 +179,6 @@ class ScraperQuotes:
         """Salvar Xlsx"""
         file_path = 'media/quotes_data.xlsx'
         df = pd.DataFrame(self.quotes_data)
-        print(df)
         df.to_excel(file_path, index=False)
         logger.success(f"Dados salvos em XLSX: {file_path}")
         notify.objects.create(title="Dados salvos em no formato XLSX", 
