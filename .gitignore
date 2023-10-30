@@ -12,7 +12,6 @@ node_modules/
 __pycache__
 
 # Arquivos específicos
-.env
 *.DS_Store
 
 # Dependências Python (pode variar dependendo das ferramentas que você usa)
