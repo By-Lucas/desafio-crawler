@@ -83,7 +83,7 @@ class ScraperQuotes:
         return None
     
     
-    def fetch_about_info(self, about_url) -> tuple | None:
+    def fetch_about_info(self, about_url) -> tuple:
         '''Faz uma solicitação para a página "about"'''
         about_response = requests.get(about_url)
         if about_response.status_code == 200:
@@ -160,7 +160,7 @@ class ScraperQuotes:
             
         return self.quotes_data
 
-    def show_dataframe(self) -> pd.DataFrame | None:
+    def show_dataframe(self) -> pd.DataFrame:
         return pd.DataFrame(self.quotes_data)
     
     def save_data_as_json(self) -> bool:

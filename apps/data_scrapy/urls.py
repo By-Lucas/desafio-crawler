@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from data_scrapy import views
 
 app_name = 'data_scrapy'
 
