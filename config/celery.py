@@ -25,7 +25,7 @@ MINUTES = config_ini['CONFIG']['UPDATE_MINUTES']
 CELERY_BROKER_URL = config('CELERY_BROKER_URL')
 
 print(CELERY_BROKER_URL)
-app = Celery('beemon', broker=CELERY_BROKER_URL)
+app = Celery('bot', broker=CELERY_BROKER_URL)
 app.conf.update(result_expires=3600, 
                 enable_utc=True,
                 task_concurrency=5,
@@ -57,13 +57,8 @@ def scrape_quotes():
 app.conf.beat_schedule = {
     'update_data': {
         'task': 'config.celery.scrape_quotes',  # Atualize para o caminho correto da sua tarefa
-        'schedule': crontab(hour=15, minute=25),
+        'schedule': crontab(hour=16, minute=30),
         'args': (),  # Exemplo de passagem de IDs (1, 2, 3)
-    },
-    'update_datas': {
-        'task': 'config.celery.scrape_quotes',  # Atualize para o caminho correto da sua tarefa
-        'schedule': crontab(hour=15, minute=27),
-        'args': (),  # Exemplo de passagem de IDs (1, 2, 3)
-    },
+    }
 }
 
