@@ -1,13 +1,14 @@
 import psycopg2
 from loguru import logger
+from decouple import config
 
 
 db_params = {
-    "database": "beemon_bot",
-    "user": "postgres",
-    "password": "123",
-    "host": "localhost",
-    "port": 5432,  # Porta padrão do PostgreSQL
+    "database": config("DB_NAME"),
+    "user": config("DB_USER"),
+    "password": config("DB_PASSWORD"),
+    "host": config("DB_HOST"),
+    "port": config("DB_PORT"),  # Porta padrão do PostgreSQL
 }
 
 # Definição da tabela
