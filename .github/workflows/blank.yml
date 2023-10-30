@@ -46,7 +46,7 @@ jobs:
         run: python manage.py migrate
     
       - name: Run Django tests
-        run: python manage.py test data_scrapy.tests.test_views
+        run: python manage.py test
         
         
 
