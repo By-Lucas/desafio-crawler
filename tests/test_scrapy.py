@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup as bs
 
 from bot.helpers.scraper_quotes import ScraperQuotes  # Importe a classe ScraperQuotes do seu módulo
 
-url = config('URL_QUOTES')
+url = "https://quotes.toscrape.com"#config('URL_QUOTES')
 
 print(url)
 
