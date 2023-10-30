@@ -24,11 +24,11 @@ DJANGO_ENVIRONMENT = config('DJANGO_ENVIRONMENT')
 # Se o ambiente é 'prod', usa a URL de produção. Caso contrário, usa a URL de QA.
 if DJANGO_ENVIRONMENT == 'prod':
     CELERY_BROKER_URL = config('CELERY_BROKER_URL_PROD')
-    CSRF_TRUSTED_ORIGINS = ['https://beemon.com.br']
+    CSRF_TRUSTED_ORIGINS = ['*','https://beemon.onrender.com/']
     SCHEMA_DB = config("SCHEMA_DB_PROD")
 else:
     CELERY_BROKER_URL = config('CELERY_BROKER_URL_QA')
-    CSRF_TRUSTED_ORIGINS = ['https://beemon-qa.com.br']
+    CSRF_TRUSTED_ORIGINS = ['*','https://beemon.onrender.com/']
     SCHEMA_DB = config("SCHEMA_DB_QA")
     
 # Sempre deixara URL principal em primeiro lugar se for utilizar
