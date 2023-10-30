@@ -57,7 +57,7 @@ def scrape_quotes():
 app.conf.beat_schedule = {
     'update_data': {
         'task': 'config.celery.scrape_quotes',  # Atualize para o caminho correto da sua tarefa
-        'schedule': crontab(hour=16, minute=30),
+        'schedule': crontab(hour=16, minute=37),
         'args': (),  # Exemplo de passagem de IDs (1, 2, 3)
     }
 }

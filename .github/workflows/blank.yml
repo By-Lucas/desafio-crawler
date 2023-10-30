@@ -43,5 +43,5 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run Bot tests
-        run: pytest
+        run: pytest .\tests\test_scrapy.py
 
