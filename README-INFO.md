@@ -1,6 +1,6 @@
 # DOCUMENTAÇÃO
 
-## Aplicação na web [Clique Aqui](https://www.google.com.br)
+## Aplicação na web [Clique Aqui](https://www.google.com.br) | Usuário: lucasdev@gmail.com , Senha: 123
 ## `INFORMAÇÕES IMPORTANTES`
 **Ficaram algumas dúvidas sobre a descrição de como seria o projeto e o que realmente gostaria ver ver funcionando, então ficou funcionando da seguinte forma `(BRANCH "BOT" TEM O EXECUTÁVEL DO PROJETO E BRANCH "MAIN", TEM O PROJETO NA WEB)`**<br>
 - *Foi utilizado o framework `django` para a execução do projeto em sí com intuíto de dar  escalabilidade do projeto, tanto na facilidade de tratamento das informações, quanto na visualização e diversas outras funcionalidades disponívels pelo framework*<br>

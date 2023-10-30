@@ -37,3 +37,4 @@ venv/
 test_scraper_quotes.py
 *.json
 *.xlsx
+.env-prod

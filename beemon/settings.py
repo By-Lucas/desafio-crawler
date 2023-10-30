@@ -25,11 +25,11 @@ DJANGO_ENVIRONMENT = config('DJANGO_ENVIRONMENT')
 if DJANGO_ENVIRONMENT == 'prod':
     CELERY_BROKER_URL = config('CELERY_BROKER_URL_PROD')
     CSRF_TRUSTED_ORIGINS = ['https://beemon.com.br']
-    SCHEMA_DB='beemon_sc'
+    SCHEMA_DB = config("SCHEMA_DB_PROD")
 else:
     CELERY_BROKER_URL = config('CELERY_BROKER_URL_QA')
     CSRF_TRUSTED_ORIGINS = ['https://beemon-qa.com.br']
-    SCHEMA_DB='beemon_sc_test'
+    SCHEMA_DB = config("SCHEMA_DB_QA")
     
 # Sempre deixara URL principal em primeiro lugar se for utilizar
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
