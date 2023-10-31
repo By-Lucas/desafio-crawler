@@ -56,7 +56,7 @@ class QuotesViews(CreateView):
         thread.join(1)
         
         context['status'] = 200,
-        context['message'] = 'Os dados serão atualizados em segundo plano. Em breve receberá uma noficicação informando.',
+        context['message'] = 'Os dados serão atualizados em segundo plano. Em breve receberá uma noficicação informando e atualize a pagina em seguida.',
         return JsonResponse(context)
 
 

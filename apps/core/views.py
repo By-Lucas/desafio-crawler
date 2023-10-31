@@ -1,9 +1,11 @@
 import os
+import json
 from loguru import logger
 from datetime import timedelta
 
 from django.utils import timezone
 from django.shortcuts import render
+from django.core import serializers
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django_celery_beat.admin import PeriodicTaskAdmin
@@ -26,6 +28,41 @@ def home(requests):
         'tasks_celery_quantity': PeriodicTask.objects.filter(enabled=True).count()
     }
     return render(requests, template_name, context)
+
+
+def get_quotes_data(request):
+    data_scrapy_list = []
+    notifications_list = []
+    
+    notify = NotificationsModel.objects.all()
+    data_scrapy = ScrapyQuotesModel.objects.all()
+    
+    for data in data_scrapy:
+        data_scrapy_list.append({
+            'title': data.title,
+            'author': data.author,
+            'born': data.born,
+            'location': data.location,
+            'tags': data.tags,
+            'description': data.description,
+        })
+    
+        
+    for notification in notify:
+        notifications_list.append({
+            'title': notification.title,
+            'created_date': (notification.created_date - timedelta(hours=3)).strftime('%d/%m/%Y %H:%M:%S')
+        })
+    
+    context = {
+        'notify_quantity': notify.count(),
+        'data_scrapy': data_scrapy_list,
+        'data_scrapy_lasted': notifications_list,
+        'data_scrapy_quantity': data_scrapy.count(),
+        'tasks_celery_quantity': PeriodicTask.objects.filter(enabled=True).count()
+    }
+    
+    return JsonResponse(context)
 
 
 def get_notifications(request):
