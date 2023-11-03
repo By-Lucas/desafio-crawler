@@ -11,7 +11,6 @@ db_params = {
     "port": config("DB_PORT"),  # Porta padrão do PostgreSQL
 }
 
-# Definição da tabela
 create_table_sql = """
 CREATE TABLE IF NOT EXISTS beemon_bot (
     id SERIAL PRIMARY KEY,
@@ -65,6 +64,7 @@ def save_data_to_postgresql(data):
                 cursor.execute(insert_query, values)
 
         conn.commit()
+        logger.success("Dados salvo no banco de dados")
     except Exception as e:
         logger.error(f"Erro ao inserir dados no PostgreSQL: {e}")
     finally:
