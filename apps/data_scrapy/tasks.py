@@ -10,7 +10,9 @@ from core.models import NotificationsModel as notify
 @shared_task(max_retries=3, queue='update-tasks', default_retry_delay=1)
 def update_data():
     logger.success('Iniciando atualização de dados agendada')
-    
+    notify.objects.create(title="Iniciando atualização de dados agendado.", 
+                                    description="Iniciando atualização de dados agendado.")
+
     scrapy = ScraperQuotes()
     scrapy__ = scrapy.run()
     if scrapy:
