@@ -1,4 +1,4 @@
-# beeMôn:
+# beeMôn: [Clique AQUI para ver nova documentação](README-INFO.md)
 
 Na beeMôn criamos muitos sistemas de raspagem de dados e buscamos todos os dias inovação na analise dos dados. Este desafio esta aberto para todos que quiserem abrir um fork e submeter suas ideias de tecnologia.
 
