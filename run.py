@@ -5,6 +5,7 @@ from decouple import config
 from threading import Thread
 from apscheduler.schedulers.background import BackgroundScheduler
 
+from bot.database.db import create_database_table
 from bot.helpers.scraper_quotes import ScraperQuotes
 
 
@@ -34,6 +35,7 @@ class Bot(Thread, ScraperQuotes):
             
 
 def run_bot():
+    create_database_table()# Criar tabela no banco de dados caso nao exista
     bot = Bot()
     bot.start()
 

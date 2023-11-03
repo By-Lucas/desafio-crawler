@@ -38,11 +38,19 @@ def create_database_table():
         if conn:
             conn.close()
 
+
+def record_exists(cursor, text, author):
+    # Consulta SQL para verificar se um registro com o mesmo texto e autor já existe
+    query = "SELECT id FROM beemon_bot WHERE text = %s AND author = %s"
+    cursor.execute(query, (text, author))
+    return cursor.fetchone() is not None
+
 def save_data_to_postgresql(data):
     conn = None
     try:
         conn = psycopg2.connect(**db_params)
         cursor = conn.cursor()
+        
         for quote in data:
             text = quote["text"]
             author = quote["Author"]
@@ -50,9 +58,12 @@ def save_data_to_postgresql(data):
             location = quote["Location"]
             tags = quote["Tags"]
             description = quote["Description"]
-            insert_query = "INSERT INTO beemon_bot (text, author, born, location, tags, description) VALUES (%s, %s, %s, %s, %s, %s)"
-            values = (text, author, born, location, tags, description)
-            cursor.execute(insert_query, values)
+
+            if not record_exists(cursor, text, author):
+                insert_query = "INSERT INTO beemon_bot (text, author, born, location, tags, description) VALUES (%s, %s, %s, %s, %s, %s)"
+                values = (text, author, born, location, tags, description)
+                cursor.execute(insert_query, values)
+
         conn.commit()
     except Exception as e:
         logger.error(f"Erro ao inserir dados no PostgreSQL: {e}")
