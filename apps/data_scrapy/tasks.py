@@ -28,7 +28,7 @@ def update_data():
                 )
             
             logger.success('Dados atualizados com sucesso')
-            notify.objects.create(title="Dados atualizados com sucesso", 
+            notify.objects.create(title="Dados atualizados com sucesso, atualize a pagina.", 
                                     description="Os dados raspadaos do site quotes foram atualizados com sucesso.")
 
         except ScrapyQuotesModel.DoesNotExist:
