@@ -4,7 +4,7 @@
 ## `INFORMAÇÕES IMPORTANTES`
 **Ficaram algumas dúvidas sobre a descrição de como seria o projeto e o que realmente gostaria ver ver funcionando, então ficou funcionando da seguinte forma `(BRANCH "BOT" TEM O EXECUTÁVEL DO PROJETO E BRANCH "MAIN", TEM O PROJETO NA WEB)`**<br>
 - *Foi utilizado o framework `django` para a execução do projeto em sí com intuíto de dar  escalabilidade do projeto, tanto na facilidade de tratamento das informações, quanto na visualização e diversas outras funcionalidades disponívels pelo framework*<br>
-- *`celery` para agendamento dinámicos e escalável para o projeto, dando a disponibilidade para multiplos agendamentos e muitas funcionalidades úteis.*
+- *`celery` para agendamento dinámicos e escalável para o projeto, dando a disponibilidade para multiplos agendamentos e muitas funcionalidades úteis, e para o probeto SCRIPT BOT foi utilizado o APScheduler, devido o scraping ser simples e de escalabilidade no momento.*
 - *`IMPORTANTE`: Não foi utilziado o `SELENIUM` pelo simples motivo de que a documentação pedia rapidez no script e como o site disponibilzava todos os benefícios a favor do `BEAUTIFULSOUP4`, então dispensei o `SELENIUM` para que o projeto não demorasse na capitura das informações. Mas o `SELENIUM` poderia ser facilmetne utilizado para fazer a abertuda do site e passar para `BS4` o `HTML` da página e assim ser mais ágil na raspagem de dados. Outro motivo de não ter utilizado o selenium é que para execução adequada iria utilizar o `SELENOID` como servidor para o mesmo, e na execução local talvez criasse uma dificuldade desnecessária já que sua configuração não é exatamente o foco do teste em sí.*
 
 # COMO CONFIGURAR E EXECUTA?
@@ -34,27 +34,36 @@ pip install -r requirements.txt
 pytest
 ```
 
-- **Criar imagem`DOCKER`**
+- **Construir imagem `DOCKER` e executar container**
 ```
-docker build -t scrapy .
-```
-
-- **Executar projeto**
-```
-docker run scrapy
+docker-compose build
 ```
 
-- **Executar projeto local**
 ```
-python -m run
-```
-
-- **Executar projeto local agendamento Celery**
-```
-celery -A config.celery worker --loglevel=INFO
-```
-```
-celery -A config.celery beat --loglevel=INFO
+docker-compose up
 ```
 
+- **Executar script local**
+```
+python run.py
+```
 
+- **Parar container `DOCKER`**
+```
+docker-compose down
+```
+
+**VERIFICAR A HORA DO DOCKER, PODE SER QUE A HORA DELE NÃO SEJA A MESMA DO SEU COMPUTADOR COMO NA IMAGEM ABAIXO.**
+![Alt text](image-1.png)
+
+## O horário para agendamento está no arquivo `config\config.ini`
+![Alt text](image.png)
+
+
+## Se desejar criar um executável do projeto
+```
+pip install pyinstaller
+```
+```
+pyinstaller --onefile .\run.py
+```
